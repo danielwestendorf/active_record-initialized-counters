@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/activerecord/initialized_counter/version"
+require_relative "lib/active_record/initialized_counter/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "activerecord-initialized_counter"
-  spec.version = Activerecord::InitializedCounter::VERSION
+  spec.name = "active_record-initialized_counter"
+  spec.version = ActiveRecord::InitializedCounter::VERSION
   spec.authors = ["Daniel Westendorf"]
   spec.email = ["daniel@prowestech.com"]
 

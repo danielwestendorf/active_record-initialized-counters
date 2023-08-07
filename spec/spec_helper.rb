@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "activerecord/initialized_counter"
+require "active_record/initialized_counter"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
