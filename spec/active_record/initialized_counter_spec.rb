@@ -146,6 +146,18 @@ RSpec.describe ActiveRecord::InitializedCounter do
     end
   end
 
+  describe ".count_and_report" do
+    it "resets, calls the passed block, and then reports" do
+      blk = proc { 1 }
+
+      expect(described_class).to receive(:reset!)
+      expect(blk).to receive(:call)
+      expect(described_class).to receive(:report)
+
+      described_class.count_and_report(&blk)
+    end
+  end
+
   describe ".count" do
     let(:klass) do
       Class.new do

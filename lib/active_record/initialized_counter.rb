@@ -49,6 +49,12 @@ module ActiveRecord
         Thread.current["active_record-initialized_counter_counts"] ||= {}
       end
 
+      def count_and_report(&blk)
+        reset!
+        blk.call
+        report
+      end
+
       def count(record)
         primary_key = record.send record.class.primary_key
 
