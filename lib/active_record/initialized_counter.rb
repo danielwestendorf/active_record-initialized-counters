@@ -4,6 +4,8 @@ require_relative "initialized_counter/version"
 
 module ActiveRecord
   module InitializedCounter
+    autoload :ActiveJob, "active_record/initialized_counter/active_job"
+
     class << self
       def config
         yield self
