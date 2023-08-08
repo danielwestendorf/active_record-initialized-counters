@@ -177,17 +177,33 @@ RSpec.describe ActiveRecord::InitializedCounter do
       end
     end
 
-    it "counts each occurrence" do
-      expect(described_class.count(klass.new(42))).to eq(1)
-      expect(described_class.count(klass.new(43))).to eq(1)
-      expect(described_class.count(klass.new(42))).to eq(2)
+    context "disabled" do
+      around do |ex|
+        described_class.disable!
+        ex.run
+        described_class.enable!
+      end
 
-      expect(described_class.counts).to eq(
-        "Klass" => {
-          42 => 2,
-          43 => 1
-        }
-      )
+      it "does not count" do
+        expect(described_class.count(klass.new(42))).to eq(nil)
+
+        expect(described_class.counts).to eq({})
+      end
+    end
+
+    context "enabled" do
+      it "counts each occurrence" do
+        expect(described_class.count(klass.new(42))).to eq(1)
+        expect(described_class.count(klass.new(43))).to eq(1)
+        expect(described_class.count(klass.new(42))).to eq(2)
+
+        expect(described_class.counts).to eq(
+          "Klass" => {
+            42 => 2,
+            43 => 1
+          }
+        )
+      end
     end
   end
 end

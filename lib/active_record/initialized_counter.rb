@@ -56,6 +56,8 @@ module ActiveRecord
       end
 
       def count(record)
+        return if disabled?
+
         primary_key = record.send record.class.primary_key
 
         counts[record.class.name] ||= Hash.new(0)
