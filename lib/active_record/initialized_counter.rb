@@ -5,6 +5,7 @@ require_relative "initialized_counter/version"
 module ActiveRecord
   module InitializedCounter
     autoload :ActiveJob, "active_record/initialized_counter/active_job"
+    autoload :Middleware, "active_record/initialized_counter/middleware"
 
     class << self
       def config
