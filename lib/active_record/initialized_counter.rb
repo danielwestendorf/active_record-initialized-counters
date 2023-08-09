@@ -6,6 +6,7 @@ module ActiveRecord
   module InitializedCounter
     autoload :ActiveJob, "active_record/initialized_counter/active_job"
     autoload :Middleware, "active_record/initialized_counter/middleware"
+    autoload :Model, "active_record/initialized_counter/model"
 
     class << self
       def config
