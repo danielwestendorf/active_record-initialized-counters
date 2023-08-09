@@ -70,3 +70,5 @@ module ActiveRecord
     end
   end
 end
+
+require_relative "initialized_counter/railtie" if defined?(Rails::Railtie)
