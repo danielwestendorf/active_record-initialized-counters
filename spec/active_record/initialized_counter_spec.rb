@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ActiveRecord::InitializedCounter do
-  describe ".config" do
+  describe ".configure" do
     it "yields" do
-      described_class.config do |config|
-        expect(config).to eq(described_class)
+      described_class.configure do |config|
+        expect(config).to eq(described_class.send(:config))
       end
     end
   end
@@ -14,7 +14,7 @@ RSpec.describe ActiveRecord::InitializedCounter do
 
     context "set to true" do
       before do
-        Thread.current["active_record-initialized_counter_disabled"] = true
+        described_class.send(:config).disabled = true
       end
 
       it { is_expected.to eq(true) }
@@ -22,7 +22,7 @@ RSpec.describe ActiveRecord::InitializedCounter do
 
     context "set to not true" do
       before do
-        Thread.current["active_record-initialized_counter_disabled"] = "true"
+         described_class.send(:config).disabled = "true"
       end
 
       it { is_expected.to eq(false) }
@@ -55,7 +55,7 @@ RSpec.describe ActiveRecord::InitializedCounter do
     subject { described_class.reporter = "foobar" }
 
     it "sets the reporter" do
-      expect { subject }.to change { Thread.current["active_record-initialized_counter_reporter"] }.to "foobar"
+      expect { subject }.to change {  described_class.send(:config).reporter }.to "foobar"
     end
   end
 
