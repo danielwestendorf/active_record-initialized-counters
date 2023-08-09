@@ -152,9 +152,10 @@ RSpec.describe ActiveRecord::InitializedCounter do
 
       expect(described_class).to receive(:reset!)
       expect(blk).to receive(:call)
+        .and_call_original
       expect(described_class).to receive(:report)
 
-      described_class.count_and_report(&blk)
+      expect(described_class.count_and_report(&blk)).to eq(1)
     end
   end
 

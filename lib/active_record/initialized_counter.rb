@@ -55,8 +55,8 @@ module ActiveRecord
 
       def count_and_report(&blk)
         reset!
-        blk.call
-        report
+
+        blk.call.tap { report }
       end
 
       def count(record)

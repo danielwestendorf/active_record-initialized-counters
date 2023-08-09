@@ -23,7 +23,12 @@ RSpec.describe ActiveRecord::InitializedCounter::Middleware do
     end
   end
 
-  let(:app) { proc { |env| FakeRecord.new } }
+  let(:app) {
+    proc { |env|
+      FakeRecord.new
+      [200, {}, "hey!"]
+    }
+  }
 
   it "counts and reports" do
     stub_const("FakeRecord", inactive_record_klass)
@@ -31,8 +36,7 @@ RSpec.describe ActiveRecord::InitializedCounter::Middleware do
     expect(ActiveRecord::InitializedCounter).to receive(:count_and_report)
       .and_call_original
 
-    described_class.new(app).call({})
-
+    expect(described_class.new(app).call({})).to eq([200, {}, "hey!"])
     expect(ActiveRecord::InitializedCounter.counts).to eq("FakeRecord" => {42 => 1})
   end
 end
