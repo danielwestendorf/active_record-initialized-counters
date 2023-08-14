@@ -263,5 +263,22 @@ RSpec.describe ActiveRecord::InitializedCounter do
         expect(described_class.counts).to eq({})
       end
     end
+
+    context "ignored class" do
+      let(:bar_klass) { Class.new(Foo) }
+
+      before do
+        stub_const("Foo", klass)
+        stub_const("Bar", bar_klass)
+      end
+
+      it "does not count when ignored" do
+        expect(described_class.count(bar_klass.new(42))).to eq(1)
+        described_class.send(:config).ignored_classes = ["Bar"]
+        expect(described_class.count(bar_klass.new(41))).to eq(nil)
+
+        expect(described_class.counts).to eq({"Klass" => {42 => 1}})
+      end
+    end
   end
 end

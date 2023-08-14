@@ -64,6 +64,7 @@ module ActiveRecord
 
       def count(record)
         return if disabled?
+        return if config.ignored_classes.any? { |klass| record.is_a?(klass) }
         return if record.class.primary_key.nil?
 
         primary_key = record.send record.class.primary_key
