@@ -103,21 +103,13 @@ RSpec.describe ActiveRecord::InitializedCounter do
     end
   end
 
-  describe ".reporter=" do
-    subject { described_class.reporter = "foobar" }
-
-    it "sets the reporter" do
-      expect { subject }.to change {  described_class.send(:config).reporter }.to "foobar"
-    end
-  end
-
   describe ".reporter" do
     subject { described_class.reporter }
 
     around do |ex|
-      described_class.reporter = reporter
+      described_class.send(:config).reporter = reporter
       ex.run
-      described_class.reporter = nil
+      described_class.send(:config).reporter = nil
     end
 
     context "default" do

@@ -35,16 +35,13 @@ module ActiveRecord
         config.disabled = Thread.current["active_record_initialized_counter_disabled"] = nil
       end
 
-      def reporter=(reporter_proc)
-        config.reporter = reporter_proc
-      end
-
-      # Reporter should be a proc-like object that expects an array object
-      # of the counts
       def reporter
         config.reporter ||= proc { |values| puts values }
       end
 
+      # Reporter should be a proc-like object that expects an array object
+      # of the counts
+      # config.reporter = proc { |hash_like_values| ... }
       def report
         reporter.call(counts) unless disabled?
 
