@@ -178,6 +178,8 @@ RSpec.describe ActiveRecord::InitializedCounter do
       end
     end
 
+    before { described_class.reset! }
+
     context "disabled" do
       around do |ex|
         described_class.disable!
@@ -204,6 +206,17 @@ RSpec.describe ActiveRecord::InitializedCounter do
             43 => 1
           }
         )
+      end
+    end
+
+    context "record without a primary key" do
+      it "does not count" do
+        expect(klass).to receive(:primary_key)
+          .and_return(nil)
+
+        expect(described_class.count(klass.new(42))).to eq(nil)
+
+        expect(described_class.counts).to eq({})
       end
     end
   end

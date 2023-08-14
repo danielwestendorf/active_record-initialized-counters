@@ -62,6 +62,7 @@ module ActiveRecord
 
       def count(record)
         return if disabled?
+        return if record.class.primary_key.nil?
 
         primary_key = record.send record.class.primary_key
 
