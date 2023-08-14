@@ -9,6 +9,29 @@ RSpec.describe ActiveRecord::InitializedCounter do
     end
   end
 
+  describe ".disable!" do
+    before { described_class.enable! }
+
+    context "with block" do
+      it "is now configured to be disabled" do
+        expect(described_class.enabled?).to eq(true)
+        result = described_class.disable! do
+          expect(described_class.enabled?).to eq(false)
+          1
+        end
+
+        expect(described_class.enabled?).to eq(true)
+        expect(result).to eq(1)
+      end
+    end
+
+    context "without block" do
+      it "is now configured to be disabled" do
+        expect { described_class.disable! }.to change(described_class, :disabled?)
+      end
+    end
+  end
+
   describe ".disabled?" do
     subject { described_class.disabled? }
 
@@ -22,10 +45,19 @@ RSpec.describe ActiveRecord::InitializedCounter do
 
     context "set to not true" do
       before do
-         described_class.send(:config).disabled = "true"
+        described_class.send(:config).disabled = "true"
       end
 
       it { is_expected.to eq(false) }
+    end
+
+    context "thread variable is set to true" do
+      before do
+        described_class.send(:config).disabled = false
+        Thread.current["active_record_initialized_counter_disabled"] = true
+      end
+
+      it { is_expected.to eq(true) }
     end
   end
 
@@ -48,6 +80,26 @@ RSpec.describe ActiveRecord::InitializedCounter do
       end
 
       it { is_expected.to eq(true) }
+    end
+  end
+
+  describe ".enabled!" do
+    subject { described_class.enable! }
+
+    context "sets the config value" do
+      before do
+        described_class.send(:config).disabled = true
+      end
+
+      it { expect { subject }.to change { Thread.current["active_record_initialized_counter_disabled"] }.to nil }
+    end
+
+    context "sets the thread variable" do
+      before do
+        Thread.current["active_record_initialized_counter_disabled"] = true
+      end
+
+      it { expect { subject }.to change { Thread.current["active_record_initialized_counter_disabled"] }.to nil }
     end
   end
 

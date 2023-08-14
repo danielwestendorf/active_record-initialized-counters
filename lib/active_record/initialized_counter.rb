@@ -19,15 +19,20 @@ module ActiveRecord
       end
 
       def disabled?
-        config.disabled == true
+        config.disabled == true || Thread.current["active_record_initialized_counter_disabled"] == true
       end
 
       def disable!
-        config.disabled = true
+        return config.disabled = true unless block_given?
+
+        Thread.current["active_record_initialized_counter_disabled"] = true
+        yield.tap do
+          Thread.current["active_record_initialized_counter_disabled"] = nil
+        end
       end
 
       def enable!
-        config.disabled = nil
+        config.disabled = Thread.current["active_record_initialized_counter_disabled"] = nil
       end
 
       def reporter=(reporter_proc)
