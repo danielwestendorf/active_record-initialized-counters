@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "ostruct"
 require_relative "initialized_counter/version"
 
 module ActiveRecord
@@ -8,6 +7,7 @@ module ActiveRecord
     autoload :ActiveJob, "active_record/initialized_counter/active_job"
     autoload :Middleware, "active_record/initialized_counter/middleware"
     autoload :Model, "active_record/initialized_counter/model"
+    autoload :Config, "active_record/initialized_counter/config"
 
     class << self
       def configure
@@ -75,7 +75,7 @@ module ActiveRecord
       private
 
       def config
-        @config ||= OpenStruct.new
+        @config ||= Config.new
       end
     end
   end
